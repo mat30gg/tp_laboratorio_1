@@ -3,7 +3,13 @@
 #include <string.h>
 #include "ArrayEmployees.h"
 
-
+/** \brief Inicializa el parametro "isEmpty" del array tipo sEmployee en 1
+ *
+ * \param employeeList
+ * \param tam
+ * \return Retorna valor positivo si no se entro en el bucle
+ *
+ */
 int initEmployees(sEmployees employeeList[], int tam)
 {
 
@@ -19,7 +25,13 @@ int initEmployees(sEmployees employeeList[], int tam)
 
 }
 
-
+/** \brief Busca un lugar libre con findOpen y la posicion en el array lo carga en loadData
+ *
+ * \param employeeList
+ * \param tam
+ * \return Retorna valor positivo si no se encontro lugar libre
+ *
+ */
 int employeeEntry(sEmployees employeeList[], int tam)
 {
 
@@ -36,6 +48,13 @@ int employeeEntry(sEmployees employeeList[], int tam)
 
 }
 
+
+/** \brief Le pide al usuario cargar los datos de una estructura de tipo sEmployee
+ *
+ * \param employeeList
+ * \param tam
+ *
+ */
 void loadData(sEmployees employeeList[], int tam, int empty)
 {
 
@@ -96,6 +115,17 @@ void loadData(sEmployees employeeList[], int tam, int empty)
 
 }
 
+
+/** \brief Carga los valores cargados en loadData en una estructura sEmployee auxiliar
+ *
+ * \param id
+ * \param name
+ * \param lastName
+ * \param salary
+ * \param sector
+ * \return retorna la estructura auxiliar sobreescribiendo la posicion en el array
+ *
+ */
 sEmployees addEmployee(int id, char name[],char lastName[],float salary,int sector)
 {
 
@@ -109,6 +139,14 @@ sEmployees addEmployee(int id, char name[],char lastName[],float salary,int sect
 
 }
 
+
+/** \brief Revisa el array employeeList
+ *
+ * \param employeeList
+ * \param tam
+ * \return Retorna una posicion en el array que tenga la variable isEmpty en 1
+ *
+ */
 int findOpen(sEmployees employeeList[], int tam)
 {
 
@@ -127,6 +165,14 @@ int findOpen(sEmployees employeeList[], int tam)
 
 }
 
+/** \brief Revisa el array employeeList y verifica que el id ingresado no exista dentro de este
+ *
+ * \param employeeList
+ * \param tam
+ * \param id
+ * \return Retorna si el ID ingresado ya esta en uso
+ *
+ */
 int findUsedID(sEmployees employeeList[], int tam, int id)
 {
 
@@ -144,6 +190,12 @@ int findUsedID(sEmployees employeeList[], int tam, int id)
 
 }
 
+/** \brief Verifica que en la cadena de caracteres solo existan tipos char
+ *
+ * \param word
+ * \return Retorna positivo si no se encontro valor alfanumerico
+ *
+ */
 int VerifyChar(char word[])
 {
 
@@ -163,6 +215,13 @@ int VerifyChar(char word[])
 
 }
 
+/** \brief Busca que alguna posicion del array tenga valores cargados
+ *
+ * \param employeeList
+ * \param tam
+ * \return Retorna positivo si no hay valores cargados
+ *
+ */
 int findLoaded(sEmployees employeeList[], int tam)
 {
 
@@ -181,6 +240,13 @@ int findLoaded(sEmployees employeeList[], int tam)
 
 }
 
+/** \brief Modifica valores de un elemento de employeeList
+ *
+ * \param employeeList
+ * \param tam
+ * \return retorna positivo si fallo en modificar
+ *
+ */
 int modifyEmployee(sEmployees employeeList[], int tam)
 {
 
@@ -198,6 +264,15 @@ int modifyEmployee(sEmployees employeeList[], int tam)
 
 }
 
+
+/** \brief Solicita el ingreso de un id
+ *
+ * \param employeeList
+ * \param message
+ * \param tam
+ * \return Retorna la posicion en el array del id ingresado
+ *
+ */
 int requestID(char message[], sEmployees employeeList[], int tam)
 {
 
@@ -214,6 +289,14 @@ int requestID(char message[], sEmployees employeeList[], int tam)
 
 }
 
+/** \brief Busca la posicion en el array employeeList que contenga el id ingresado
+ *
+ * \param employeeList
+ * \param tam
+ * \param id
+ * \return Retorna la posicion en el array del elemento con el id ingresado
+ *
+ */
 int findIDPos(sEmployees employeeList[], int tam, int id)
 {
 
@@ -232,6 +315,11 @@ int findIDPos(sEmployees employeeList[], int tam, int id)
 
 }
 
+/** \brief Imprime los datos de un elemento de tipo sEmployees
+ *
+ * \param employeeList
+ *
+ */
 void printOneEmployee(sEmployees employeeList)
 {
 
@@ -246,6 +334,12 @@ void printOneEmployee(sEmployees employeeList)
 
 }
 
+/** \brief Muestra en pantalla un menu de opciones para modificar valores
+ *
+ * \param employeeList
+ * \return Retorna el elemento modificado
+ *
+ */
 sEmployees modifyMenu(sEmployees employeeList)
 {
 
@@ -283,6 +377,13 @@ sEmployees modifyMenu(sEmployees employeeList)
 	return employeeList;
 }
 
+/** \brief Modifica los valores de la cadena name
+ *
+ * \param name
+ * \param data
+ * \param errorMessage
+ *
+ */
 void modifyName(char name[], char data[], char errorMessage[])
 {
 
@@ -302,7 +403,12 @@ void modifyName(char name[], char data[], char errorMessage[])
 
 }
 
-
+/** \brief Verifica que no hayan espacion en una cadena de caracteres
+ *
+ * \param word
+ * \return Retorna un valor positivo si se encontraron espacios
+ *
+ */
 int verifySpaces(char word[])
 {
 
@@ -322,6 +428,13 @@ int verifySpaces(char word[])
 
 }
 
+
+/** \brief Verifica que no hayan numeros en una cadena de caracteres
+ *
+ * \param word
+ * \return Retorna un valor positivo si se encontraron numeros
+ *
+ */
 int verifyNumbers(char word[])
 {
 
@@ -341,7 +454,12 @@ int verifyNumbers(char word[])
 
 }
 
-
+/** \brief Modifica el valor de la variable salary de un sEmployee
+ *
+ * \param employeeList
+ * \return Retorna el nuevo valor de la variable salary
+ *
+ */
 float modifySalary(sEmployees employeeList)
 {
 
@@ -359,6 +477,12 @@ float modifySalary(sEmployees employeeList)
 
 }
 
+/** \brief Modifica el valor de la variable sector de un sEmployee
+ *
+ * \param employeeList
+ * \return Retorna el nuevo valor de la variable sector
+ *
+ */
 int modifySector(sEmployees employeeList)
 {
 
@@ -377,7 +501,12 @@ int modifySector(sEmployees employeeList)
 }
 
 
-
+/** \brief Elimina logicamente un elemento de tipo sEmployee cambiando el valor de la variable isEmpty
+ *
+ * \param employeeList
+ * \return Retorna positivo si fallo en eliminar elemento
+ *
+ */
 int removeEmployee(sEmployees employeeList[], int tam)
 {
 
@@ -390,12 +519,19 @@ int removeEmployee(sEmployees employeeList[], int tam)
 		if(deleteEmployee(employeeList[pos]))
 		{
 			employeeList[pos].isEmpty = 1;
+			error = 0;
 		}
 	}
 	return error;
 
 }
 
+/** \brief Verifica que el usuario quiera eliminar un empleado
+ *
+ * \param employeeList
+ * \return Retorna la validacion
+ *
+ */
 int deleteEmployee(sEmployees employeeList)
 {
 	int choice;
@@ -413,6 +549,12 @@ int deleteEmployee(sEmployees employeeList)
 
 }
 
+/** \brief Verifica que se ingreso los caracteres 's' o 'n'
+ *
+ * \param input
+ * \return Retorna 0 si se ingreso n o un valor erroneo
+ *
+ */
 int yesOrNo(int input)
 {
 
@@ -437,6 +579,13 @@ int yesOrNo(int input)
 
 }
 
+/** \brief Solicita el ingreso de un valor para definir como se mostrara el listado ordenado
+ *
+ * \param employeeList
+ * \param tam
+ * \return
+ *
+ */
 int sortMenu(sEmployees employeeList[], int tam)
 {
 
@@ -453,7 +602,14 @@ int sortMenu(sEmployees employeeList[], int tam)
 
 }
 
-
+/** \brief Llama a la funcion correspondiente segun el valor que se ingreso como metodo de ordenamiento
+ *
+ * \param employeeList
+ * \param tam
+ * \param order
+ * \return Retorna positivo si fallo en ordenar
+ *
+ */
 int sortEmployees(sEmployees employeeList[], int tam, int order)
 {
 
@@ -477,6 +633,13 @@ int sortEmployees(sEmployees employeeList[], int tam, int order)
 
 }
 
+
+/** \brief Ordena de forma ascendente un array auxiliar de tipo sEmployees
+ *
+ * \param employeeList
+ * \param tam
+ *
+ */
 void AscendingOrder(sEmployees auxList[], int tam)
 {
 
@@ -502,6 +665,13 @@ void AscendingOrder(sEmployees auxList[], int tam)
 
 }
 
+
+/** \brief Ordena de forma descendente un array auxiliar de tipo sEmployees
+ *
+ * \param employeeList
+ * \param tam
+ *
+ */
 void DescendingOrder(sEmployees auxList[], int tam)
 {
 
