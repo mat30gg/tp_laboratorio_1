@@ -42,7 +42,11 @@ int main(void)
 				if(findLoaded(employeeList, TAM) == 0)
 				{
 					printEmployees(employeeList, TAM);
-					removeEmployee(employeeList, TAM);
+					if(removeEmployee(employeeList, TAM))
+					{
+						printf("\nERROR AL PURGAR EMPLEADO");
+					}
+
 				}
 				else
 				{
