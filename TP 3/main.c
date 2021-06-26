@@ -27,7 +27,6 @@ int main()
 
 	startLastId("data.csv");
 
-
     int option;
     LinkedList* pArrayListEmployee = ll_newLinkedList();
     do{

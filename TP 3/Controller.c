@@ -122,10 +122,10 @@ int controller_editEmployee(LinkedList* pArrayListEmployee)
  */
 int controller_removeEmployee(LinkedList* pArrayListEmployee)
 {
-	char* idToDel;
-	idToDel = (char*) malloc(12);
-	getString("Ingrese numero de ID para eliminar: ", idToDel);
-
+	Employee* aux;
+	aux = (Employee*) malloc(sizeof(Employee));
+	aux = (Employee*) ll_get(pArrayListEmployee, 4);
+	printf("%d, %s, %d, %d", aux->id, aux->nombre, aux->horasTrabajadas, aux->sueldo);
     return 1;
 }
 
@@ -138,28 +138,35 @@ int controller_removeEmployee(LinkedList* pArrayListEmployee)
  */
 int controller_ListEmployee(LinkedList* pArrayListEmployee)
 {
-    Employee* aux;
-    int exito;
-    int x;
-    int id;
-    char* nombre;
-    int horasTrabajadas;
-    int sueldo;
-    nombre = (char*) malloc(128);
-    exito = 0;
-    if(ll_len(pArrayListEmployee)>0)
-    {
-    	for(x=0; x<ll_len(pArrayListEmployee); x++)
-    	{
-    		aux = ll_get(pArrayListEmployee, x);
-    		employee_getId(aux, &id);
-    		employee_getNombre(aux, nombre);
-    		employee_getHorasTrabajadas(aux, &horasTrabajadas);
-    		employee_getSueldo(aux, &sueldo);
-    		printf("[%4d] <%-9s>  %-3d Hs | $%d\n", id, nombre, horasTrabajadas, sueldo);
-    	}
-    }
+	int exito;
+	Employee* aux;
+	int x;
+	int id;
+	char* nombre;
+	int horasTrabajadas;
+	int sueldo;
+	exito = 0;
+	if(ll_isEmpty(pArrayListEmployee) != 0)
+	{
 
+		nombre = (char*) malloc(128);
+		if(ll_len(pArrayListEmployee)>0)
+		{
+			for(x=0; x<ll_len(pArrayListEmployee); x++)
+			{
+				aux = ll_get(pArrayListEmployee, x);
+				employee_getId(aux, &id);
+				employee_getNombre(aux, nombre);
+				employee_getHorasTrabajadas(aux, &horasTrabajadas);
+				employee_getSueldo(aux, &sueldo);
+				printf("[%4d] <%-9s>  %-3d Hs | $%d\n", id, nombre, horasTrabajadas, sueldo);
+			}
+		}
+	}
+	else
+	{
+		printf("No se encuentran elementos dentro de la lista.");
+	}
     return exito;
 }
 
