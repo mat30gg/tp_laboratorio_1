@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include "ArrayEmployees.h"
+#include "input.h"
 
 int main(void)
 {
 	setbuf(stdout, NULL);
 	int choice;
+	int aux;
 	sEmployees employeeList[TAM];
 	if(initEmployees(employeeList, TAM))
 	{
@@ -41,12 +43,15 @@ int main(void)
 			case 3:
 				if(findLoaded(employeeList, TAM) == 0)
 				{
-					printEmployees(employeeList, TAM);
-					if(removeEmployee(employeeList, TAM))
+					aux = getInt("Ingrese ID a eliminar.");
+					if(aux != -1)
+					{
+						removeEmployee(employeeList, TAM, aux);
+					}
+					else
 					{
 						printf("\nERROR AL PURGAR EMPLEADO");
 					}
-
 				}
 				else
 				{

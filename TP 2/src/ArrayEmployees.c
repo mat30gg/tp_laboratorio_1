@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <string.h>
 #include "ArrayEmployees.h"
+#include "input.h"
 
 /** \brief Inicializa el parametro "isEmpty" del array tipo sEmployee en 1
  *
@@ -57,44 +58,33 @@ int employeeEntry(sEmployees employeeList[], int tam)
  */
 void loadData(sEmployees employeeList[], int tam, int empty)
 {
-
 	int id;
 	char name[51];
 	char lastName[51];
 	float salary;
 	int sector;
+	id = empty+1;
 	do{
-
-		printf("\nIngrese ID del empleado: ");
-		scanf("%d", &id);
-		if(findUsedID(employeeList, tam, id)==0)
-		{
-			printf("\nID de empleado ya ingresado.");
-		}
-
-	}while(findUsedID(employeeList, tam, id)==0);
-	do{
-
 		fflush(stdin);
 		printf("\nIngrese nombre del empleado: ");
 		scanf("%[^\n]", name);
-		if(verifySpaces(name) == 1 || verifyNumbers(name) == 1)
+		if(esEspaciado(name) == 1 || esAlfanumerica(name) == 0)
 		{
 			printf("\nIngrese un nombre valido sin espacios y numeros.");
 		}
 
-	}while(verifySpaces(name) == 1 || verifyNumbers(name) == 1);
+	}while(esEspaciado(name) == 1 || esAlfanumerica(name) == 0);
 	do{
 
 		fflush(stdin);
 		printf("\nIngrese el apellido del empleado: ");
 		scanf("%[^\n]", lastName);
-		if(verifySpaces(lastName) == 1 || verifyNumbers(lastName) == 1)
+		if(esEspaciado(lastName) == 1 || esAlfanumerica(lastName) == 0)
 		{
 			printf("\nIngrese un apellido valido sin espacios y numeros.");
 		}
 
-	}while(verifySpaces(lastName) == 1 || verifyNumbers(lastName) == 1);
+	}while(esEspaciado(lastName) == 1|| esAlfanumerica(lastName) == 0);
 	do{
 
 		printf("\nIngrese el salario del empleado: ");
@@ -165,30 +155,7 @@ int findOpen(sEmployees employeeList[], int tam)
 
 }
 
-/** \brief Revisa el array employeeList y verifica que el id ingresado no exista dentro de este
- *
- * \param employeeList
- * \param tam
- * \param id
- * \return Retorna si el ID ingresado ya esta en uso
- *
- */
-int findUsedID(sEmployees employeeList[], int tam, int id)
-{
 
-	int error;
-	error = 1;
-	int x;
-	for(x=0;x!=tam;x++)
-	{
-		if(id == employeeList[x].id && employeeList[x].isEmpty == 0)
-		{
-			error = 0;
-		}
-	}
-	return error;
-
-}
 
 /** \brief Verifica que en la cadena de caracteres solo existan tipos char
  *
@@ -278,12 +245,15 @@ int requestID(char message[], sEmployees employeeList[], int tam)
 
 	int id;
 	int pos;
-	printf("\n%s", message);
-	scanf("%d", &id);
-	pos = findIDPos(employeeList, tam, id);
-	if(pos == -1)
+	id = getInt(message);
+	if(id == -1)
 	{
+		pos = id;
 		printf("ID de empleado no encontrada.");
+	}
+	else
+	{
+		pos = findEmployeeById(employeeList, tam, id);
 	}
 	return pos;
 
@@ -297,7 +267,7 @@ int requestID(char message[], sEmployees employeeList[], int tam)
  * \return Retorna la posicion en el array del elemento con el id ingresado
  *
  */
-int findIDPos(sEmployees employeeList[], int tam, int id)
+int findEmployeeById(sEmployees employeeList[], int tam, int id)
 {
 
 	int x;
@@ -351,8 +321,6 @@ sEmployees modifyMenu(sEmployees employeeList)
 		printf("\n (2) - Apellido.");
 		printf("\n (3) - Salario.");
 		printf("\n (4) - Sector.");
-		printf("\n (5) - Imprimir datos.");
-		printf("\n (0) - Cancelar modificacion.");
 		printf("\n °:");
 		scanf("%d", &choice);
 		switch(choice)
@@ -366,12 +334,12 @@ sEmployees modifyMenu(sEmployees employeeList)
 			case 3:
 				employeeList.salary = modifySalary(employeeList);
 			break;
-			case 4:
+			/*case 4:
 				employeeList.sector = modifySector(employeeList);
 			break;
 			case 5:
 				printOneEmployee(employeeList);
-			break;
+			break;*/
 		}
 	}while(choice != 0);
 	return employeeList;
@@ -392,7 +360,7 @@ void modifyName(char name[], char data[], char errorMessage[])
 	printf("\nNuevo %s: ", data);
 	fflush(stdin);
 	scanf("%[^\n]", auxiliar);
-	if(verifySpaces(auxiliar) == 1 || verifyNumbers(auxiliar) == 1)
+	if(esEspaciado(auxiliar) == 1|| esAlfanumerica(auxiliar) == 0)
 	{
 		printf("%s", errorMessage);
 	}
@@ -403,56 +371,7 @@ void modifyName(char name[], char data[], char errorMessage[])
 
 }
 
-/** \brief Verifica que no hayan espacion en una cadena de caracteres
- *
- * \param word
- * \return Retorna un valor positivo si se encontraron espacios
- *
- */
-int verifySpaces(char word[])
-{
 
-	int spaces;
-	int x;
-	int size;
-	size = strlen(word);
-	spaces = 0;
-	for(x=0;x!=size;x++)
-	{
-		if(isspace(word[x]) != 0)
-		{
-			spaces = 1;
-		}
-	}
-	return spaces;
-
-}
-
-
-/** \brief Verifica que no hayan numeros en una cadena de caracteres
- *
- * \param word
- * \return Retorna un valor positivo si se encontraron numeros
- *
- */
-int verifyNumbers(char word[])
-{
-
-	int numbers;
-	int x;
-	int size;
-	size = strlen(word);
-	numbers = 0;
-	for(x=0;x!=size;x++)
-	{
-		if(isdigit(word[x]) != 0)
-		{
-			numbers = 1;
-		}
-	}
-	return numbers;
-
-}
 
 /** \brief Modifica el valor de la variable salary de un sEmployee
  *
@@ -507,13 +426,13 @@ int modifySector(sEmployees employeeList)
  * \return Retorna positivo si fallo en eliminar elemento
  *
  */
-int removeEmployee(sEmployees employeeList[], int tam)
+int removeEmployee(sEmployees employeeList[], int tam, int id)
 {
 
 	int error;
 	int pos;
 	error = 1;
-	pos = requestID("\n\nIngrese ID del empleado a dar de baja: ", employeeList, tam);
+	pos = findEmployeeById(employeeList, tam, id);
 	if(pos != -1)
 	{
 		if(deleteEmployee(employeeList[pos]))
@@ -535,49 +454,17 @@ int removeEmployee(sEmployees employeeList[], int tam)
 int deleteEmployee(sEmployees employeeList)
 {
 	int choice;
-	char verify;
 	printf("Desea eliminar?");
 	printOneEmployee(employeeList);
 	do{
-		printf("\nIngrese S o N: ");
-		fflush(stdin);
-		scanf("%c", &verify);
-		verify = toupper(verify);
-		choice = yesOrNo(verify);
-	}while(verify != 'N' && verify != 'S');
+		setbuf(stdin, NULL);
+		choice = getSON("\nIngrese S o N: ");
+	}while(choice != 0 && choice != 1);
 	return choice;
 
 }
 
-/** \brief Verifica que se ingreso los caracteres 's' o 'n'
- *
- * \param input
- * \return Retorna 0 si se ingreso n o un valor erroneo
- *
- */
-int yesOrNo(int input)
-{
 
-	int value;
-	if(input != 'N' && input != 'S')
-	{
-		printf("Respuesta invalida.");
-		value = 0;
-	}
-	else
-	{
-		if(input == 'S')
-		{
-			value = 1;
-		}
-		else
-		{
-			value = 0;
-		}
-	}
-	return value;
-
-}
 
 /** \brief Solicita el ingreso de un valor para definir como se mostrara el listado ordenado
  *
