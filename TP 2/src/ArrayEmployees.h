@@ -8,6 +8,8 @@ typedef struct{
 	int isEmpty;
 }sEmployees;
 
+void HardcodearEmpleados(sEmployees[]);
+
 int initEmployees(sEmployees[], int);//
 int employeeEntry(sEmployees[], int);//
 int findOpen(sEmployees[], int);//
@@ -28,14 +30,12 @@ void modifyName(char[], char[], char[]);//
 float modifySalary(sEmployees);//
 int modifySector(sEmployees);//
 
-void AscendingOrder(sEmployees[], int);
-void DescendingOrder(sEmployees[], int);
-
+void Swap(sEmployees[], int, int);
 void CopyList(sEmployees[], sEmployees[], int);
 void OrderBySector(sEmployees[], int);
-void PrintEmployeesBySector(sEmployees[], int);
 int sortMenu(sEmployees[], int);
 int AverageSalary(sEmployees[], int);
 void printOverAverage(sEmployees[], int, float);
 int CountLoaded(sEmployees[], int);
-int SumSalaries(sEmployees[], int);
+float SumSalaries(sEmployees[], int);
+float GetAverage(float, int);

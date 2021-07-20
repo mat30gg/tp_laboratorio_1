@@ -27,4 +27,11 @@ int employee_getSueldo(Employee* this,int* sueldo);
 void startLastId(char*);
 void updateLastId(int);
 
+void printOneEmployee(Employee* this);
+int employee_modifyNombre(Employee* this);
+int employee_modifyHorasTrabajadas(Employee* this);
+int employee_modifySueldo(Employee* this);
+
+int ordenNombre(void*, void*);
+int ordenSueldo(void*, void*);
 #endif // employee_H_INCLUDED

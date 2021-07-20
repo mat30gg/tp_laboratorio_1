@@ -14,6 +14,7 @@ char getChar(char* msg);
 int getSON(char* msg);
 int getString(char* msg, char* destino);
 int esNumerica(char* cadena);
+int esFlotante(char* cadena);
 int esAlfanumerica(char* cadena);
 int esEspaciado(char* cadena);
 

@@ -1,20 +1,43 @@
 #include <stdio.h>
 #include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
 #include "input.h"
 
 int getInt(char* msg)
 {
 	int returnAux;
-	printf("%s", msg);
-	scanf("%d", &returnAux);
+	char stringAux[24];
+	do{
+		getString(msg, stringAux);
+		if(esNumerica(stringAux))
+		{
+			returnAux = atoi(stringAux);
+		}
+		else
+		{
+			printf("Ingrese valor numerico valido.\n");
+		}
+	}while(esNumerica(stringAux) != 1);
 	return returnAux;
 }
 
 float getFloat(char* msg)
 {
 	float returnAux;
-	printf("%s", msg);
-	scanf("%f", &returnAux);
+	char stringAux[24];
+	returnAux = 0;
+	do{
+		getString(msg, stringAux);
+		if(esFlotante(stringAux))
+		{
+			returnAux = atof(stringAux);
+		}
+		else
+		{
+			printf("Ingrese valor numerico valido.\n");
+		}
+	}while(esFlotante(stringAux) != 1);
 	return returnAux;
 }
 
@@ -32,14 +55,17 @@ int getString(char* msg, char* destino)
 	returnAux = 0;
 	printf("%s", msg);
 	scanf("%s", destino);
-	if(esNumerica(destino))
+	if(esNumerica(destino) || esEspaciado(destino))
 	{
 		returnAux = -1;
 	}
-
 	return returnAux;
 }
 
+/* Retorna 1 si hay valores numericos en la cadena y 0 si hay !numericos
+ *
+ *
+ */
 int esNumerica(char* cadena)
 {
 	int i=0;
@@ -59,6 +85,27 @@ int esNumerica(char* cadena)
 	return returnAux;
 }
 
+int esFlotante(char* cadena)
+{
+	int i=0;
+	int returnAux = 1;
+	if(strlen(cadena) > 0)
+	{
+		while(*(cadena+i) != '\0')
+		{
+			if((int)cadena[i] < 46 || (int)cadena[i] > 57 || (int)cadena[i] == 47)
+			{
+				returnAux = 0;
+				break;
+			}
+			i++;
+		}
+	}
+	return returnAux;
+}
+/*	Retorna 1 si solo hay valores alfanumericos en la cadena y 0 cuando hay !alfanumericos
+ *
+ */
 int esAlfanumerica(char* cadena)
 {
 	int i = 0;
@@ -79,7 +126,9 @@ int esAlfanumerica(char* cadena)
 	}
 	return returnAux;
 }
-
+/*	Retorna 0 si no hay espacios y retorna 1 si se encuentran
+ *
+ */
 int esEspaciado(char* cadena)
 {
 	int espacios = 0;

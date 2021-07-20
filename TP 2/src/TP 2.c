@@ -2,6 +2,8 @@
 #include "ArrayEmployees.h"
 #include "input.h"
 
+
+
 int main(void)
 {
 	setbuf(stdout, NULL);
@@ -12,14 +14,16 @@ int main(void)
 	{
 		printf("ERROR DE MEMORIA.");
 	}
+	HardcodearEmpleados(employeeList);
 	do{
-		printf("\n\n  Elija una opcion.");
-		printf("\n 1 - Alta.");
-		printf("\n 2 - Modificacion.");
-		printf("\n 3 - Baja.");
-		printf("\n 4 - Listado por sector en orden alfabetico.");
-		printf("\n 5 - Total de promedio de salarios.");
-		printf("\n 0 - SALIR.\n");
+		printf("\n -------------------");
+		printf("\n ||Menu:");
+		printf("\n ||1 - Alta.");
+		printf("\n ||2 - Modificacion.");
+		printf("\n ||3 - Baja.");
+		printf("\n ||4 - Listado en orden alfabetico por sector y promedio de salarios.");
+		printf("\n ||0 - SALIR.");
+		printf("\n || = ");
 		scanf("%d", &choice);
 		switch(choice)
 		{
@@ -65,15 +69,6 @@ int main(void)
 					{
 						printf("\n\nERROR AL ORDENAR LISTADO.");
 					}
-				}
-				else
-				{
-					printf("\n\nNO SE CARGARON EMPLEADOS\n");
-				}
-			break;
-			case 5:
-				if(findLoaded(employeeList, TAM) == 0)
-				{
 					if(AverageSalary(employeeList, TAM))
 					{
 						printf("\nERROR AL CALCULAR SALARIOS.");
@@ -89,3 +84,6 @@ int main(void)
 	}while(choice != 0);
 	return 0;
 }
+
+
+

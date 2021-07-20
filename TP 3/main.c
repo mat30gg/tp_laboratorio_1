@@ -27,15 +27,20 @@ int main()
 
 	startLastId("data.csv");
 
+
     int option;
     LinkedList* pArrayListEmployee = ll_newLinkedList();
     do{
-    	printf("\nMenu");
-    	printf("\n	1. Carga de datos de empleados desde archivo data.csv (Texto).");
-    	printf("\n	2. Carga de datos de empleados desde archivo data.bin (Binario).");
-    	printf("\n	3. Alta empleado.");
-    	printf("\n	5. Baja empleado.");
-    	printf("\n	6. Listar empleados.");
+    	printf("\n|| Menu");
+    	printf("\n|| 1. Carga de datos de empleados desde archivo data.csv (Texto).");
+    	printf("\n|| 2. Carga de datos de empleados desde archivo data.bin (Binario).");
+    	printf("\n|| 3. Alta empleado.");
+    	printf("\n|| 4. Modificar empleado.");
+    	printf("\n|| 5. Baja empleado.");
+    	printf("\n|| 6. Listar empleados.");
+    	printf("\n|| 7. Ordenar empleados.");
+    	printf("\n|| 10. SALIR.");
+    	printf("\n|| =:= ");
     	scanf("\n%d", &option);
         switch(option)
         {
@@ -48,12 +53,41 @@ int main()
             case 3:
             	controller_addEmployee(pArrayListEmployee);
                 break;
+            case 4:
+            	if(ll_len(pArrayListEmployee) != 0)
+            	{
+            		controller_editEmployee(pArrayListEmployee);
+            	}
+            	break;
             case 5:
-            	controller_removeEmployee(pArrayListEmployee);
+            	if(ll_len(pArrayListEmployee) != 0)
+            	{
+            		controller_removeEmployee(pArrayListEmployee);
+            	}
             	break;
             case 6:
-            	controller_ListEmployee(pArrayListEmployee);
+            	if(ll_len(pArrayListEmployee) != 0)
+            	{
+            		controller_ListEmployee(pArrayListEmployee);
+            	}
             	break;
+            case 7:
+            	if(ll_len(pArrayListEmployee) != 0)
+            	{
+            		controller_sortEmployee(pArrayListEmployee);
+            	}
+            	break;
+            case 8:
+            	if(ll_len(pArrayListEmployee) != 0)
+            	{
+            		controller_saveAsText("data.csv",pArrayListEmployee);
+            	}
+            	break;
+            case 9:
+            	if(ll_len(pArrayListEmployee) != 0)
+            	{
+            		controller_saveAsBinary("data.bin", pArrayListEmployee);
+            	}
         }
     }while(option != 10);
     return 0;

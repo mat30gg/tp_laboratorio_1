@@ -1,10 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "LinkedList.h"
 #include "Employee.h"
 #include "parser.h"
 #include "input.h"
+
 
 
 /** \brief Carga los datos de los empleados desde el archivo data.csv (modo texto).
@@ -92,13 +94,53 @@ int controller_addEmployee(LinkedList* pArrayListEmployee)
 	sueldo = (char*) malloc(5);
 
 
-	getString("\nIngrese nombre: ", nombre);
-	getString("\nIngrese horas de trabajo: ", horasTrabajadas);
-	getString("\nIngrese sueldo: ", sueldo);
-	aux = employee_newParametros(id, nombre, horasTrabajadas, sueldo);
-	ll_add(pArrayListEmployee, aux);
+	if(getString("\nIngrese nombre: ", nombre) != -1)
+	{
+		nombre[0] = toupper(nombre[0]);
+		if(getStringNum("\nIngrese horas de trabajo: ", horasTrabajadas) != -1)
+		{
+			if(getStringNum("\nIngrese sueldo: ", sueldo) != -1)
+			{
+				aux = employee_newParametros(id, nombre, horasTrabajadas, sueldo);
+				ll_add(pArrayListEmployee, aux);
+			}
+			else
+			{
+				printf("\n\nSueldo contiene espacios o valores no validos\n\n");
+			}
+		}
+		else
+		{
+			printf("\n\nHoras de trabajo contiene valores no valido o espacios.\n\n");
+		}
+	}
+	else
+	{
+		printf("\n\nNombre ingresado contiene espacios o numeros.\n\n");
+	}
 	fclose(aUltimo);
     return exito;
+}
+
+
+int findIndexId(LinkedList* pArrayListEmployee, int id)
+{
+	Employee* aux;
+	int returnAux;
+	int len;
+	returnAux = -1;
+	len = ll_len(pArrayListEmployee);
+	for(int x = 0;x != len; x++)
+	{
+		aux = ll_get(pArrayListEmployee, x);
+		if(aux->id == id)
+		{
+			returnAux = x;
+			break;
+		}
+	}
+	employee_delete(aux);
+	return returnAux;
 }
 
 /** \brief Modificar datos de empleado
@@ -110,7 +152,40 @@ int controller_addEmployee(LinkedList* pArrayListEmployee)
  */
 int controller_editEmployee(LinkedList* pArrayListEmployee)
 {
-    return 1;
+	Employee* aux;
+	int id;
+	int index;
+	int menu;
+	if(pArrayListEmployee != NULL)
+	{
+		id = getInt("Ingrese ID del empleado a modificar: ");
+		index = findIndexId(pArrayListEmployee, id);
+		aux = ll_get(pArrayListEmployee, index);
+		printf("Modificando a empleado.\n");
+		printOneEmployee(aux);
+		do{
+			printf("  |||Que se va a modificar: ");
+			printf("\n||| 1 : Nombre.");
+			printf("\n||| 2 : HorasTrabajadas.");
+			printf("\n||| 3 : Sueldo.");
+			printf("\n||| 0 : Cancelar.");
+			printf("\n||| :=: ");
+			scanf("%d", &menu);
+			switch(menu)
+			{
+			case 1:
+				employee_modifyNombre(aux);
+			break;
+			case 2:
+				employee_modifyHorasTrabajadas(aux);
+			break;
+			case 3:
+				employee_modifySueldo(aux);
+			break;
+			}
+		}while(menu != 0);
+	}
+	return 1;
 }
 
 /** \brief Baja de empleado
@@ -122,11 +197,19 @@ int controller_editEmployee(LinkedList* pArrayListEmployee)
  */
 int controller_removeEmployee(LinkedList* pArrayListEmployee)
 {
-	Employee* aux;
-	aux = (Employee*) malloc(sizeof(Employee));
-	aux = (Employee*) ll_get(pArrayListEmployee, 4);
-	printf("%d, %s, %d, %d", aux->id, aux->nombre, aux->horasTrabajadas, aux->sueldo);
-    return 1;
+	int exito;
+	int index;
+	int id;
+	exito = 0;
+	if(pArrayListEmployee != NULL)
+	{
+		exito = 1;
+		id = getInt("Ingrese numero ID para eliminar: ");
+		index = findIndexId(pArrayListEmployee, id);
+		ll_remove(pArrayListEmployee, index);
+
+	}
+    return exito;
 }
 
 /** \brief Listar empleados
@@ -138,35 +221,19 @@ int controller_removeEmployee(LinkedList* pArrayListEmployee)
  */
 int controller_ListEmployee(LinkedList* pArrayListEmployee)
 {
-	int exito;
-	Employee* aux;
-	int x;
-	int id;
-	char* nombre;
-	int horasTrabajadas;
-	int sueldo;
-	exito = 0;
-	if(ll_isEmpty(pArrayListEmployee) != 0)
-	{
+    Employee* aux;
+    int exito;
+    int x;
+    exito = 0;
+    if(ll_len(pArrayListEmployee)>0)
+    {
+    	for(x=0; x<ll_len(pArrayListEmployee); x++)
+    	{
+    		aux = ll_get(pArrayListEmployee, x);
+    		printOneEmployee(aux);
+    	}
+    }
 
-		nombre = (char*) malloc(128);
-		if(ll_len(pArrayListEmployee)>0)
-		{
-			for(x=0; x<ll_len(pArrayListEmployee); x++)
-			{
-				aux = ll_get(pArrayListEmployee, x);
-				employee_getId(aux, &id);
-				employee_getNombre(aux, nombre);
-				employee_getHorasTrabajadas(aux, &horasTrabajadas);
-				employee_getSueldo(aux, &sueldo);
-				printf("[%4d] <%-9s>  %-3d Hs | $%d\n", id, nombre, horasTrabajadas, sueldo);
-			}
-		}
-	}
-	else
-	{
-		printf("No se encuentran elementos dentro de la lista.");
-	}
     return exito;
 }
 
@@ -179,7 +246,34 @@ int controller_ListEmployee(LinkedList* pArrayListEmployee)
  */
 int controller_sortEmployee(LinkedList* pArrayListEmployee)
 {
-    return 1;
+	int exito;
+	int orden;
+	int eleccion;
+	exito = 0;
+	if(pArrayListEmployee != NULL)
+	{
+		printf("Con que criterio se ordena la lista:");
+		printf("\n|| 1. Por nombre.");
+		printf("\n|| 2. Por sueldo.");
+		printf("\n|| :=: ");
+		scanf("%d", &eleccion);
+		printf("De que forma: ");
+		printf("\n|| 0. Ascendente.");
+		printf("\n|| 1. Descendente.");
+		printf("\n|| :=: ");
+		scanf("%d", &orden);
+		switch(eleccion)
+		{
+		case 1:
+			ll_sort(pArrayListEmployee, ordenNombre, orden);
+			break;
+		case 2:
+			ll_sort(pArrayListEmployee, ordenSueldo, orden);
+			break;
+		}
+		//aux = ll_sort(pArrayListEmployee, ordenNombre, 0);
+	}
+    return exito;
 }
 
 /** \brief Guarda los datos de los empleados en el archivo data.csv (modo texto).
@@ -191,7 +285,24 @@ int controller_sortEmployee(LinkedList* pArrayListEmployee)
  */
 int controller_saveAsText(char* path , LinkedList* pArrayListEmployee)
 {
-    return 1;
+	FILE* newT;
+	Employee* aux;
+	int exito;
+	int len;
+	exito = 0;
+	newT = fopen(path, "w");
+	aux = (Employee*) malloc(sizeof(Employee));
+	len = ll_len(pArrayListEmployee);
+	if(pArrayListEmployee != NULL && newT != NULL)
+	{
+		fprintf(newT, "id,nombre,horastrabajadas,sueldo");
+		for(int x = 0;x != len; x++)
+		{
+			aux = ll_get(pArrayListEmployee, x);
+			fprintf(newT, "%d, %s, %d, %d\n", aux->id, aux->nombre, aux->horasTrabajadas, aux->sueldo);
+		}
+	}
+    return exito;
 }
 
 /** \brief Guarda los datos de los empleados en el archivo data.csv (modo binario).
@@ -203,6 +314,20 @@ int controller_saveAsText(char* path , LinkedList* pArrayListEmployee)
  */
 int controller_saveAsBinary(char* path , LinkedList* pArrayListEmployee)
 {
-    return 1;
+	FILE* newT;
+	Employee* aux;
+	int exito;
+	int len;
+	exito = 0;
+	newT = fopen("test.bin", "wb");
+	aux = (Employee*) malloc(sizeof(Employee));
+	len = ll_len(pArrayListEmployee);
+	if(pArrayListEmployee != NULL && newT != NULL)
+	{
+		for(int x = 0;x != len; x++)
+		{
+			aux = ll_get(pArrayListEmployee, x);
+		}
+	}
+	return exito;
 }
-

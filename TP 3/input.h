@@ -8,6 +8,16 @@
 #ifndef INPUT_H_
 #define INPUT_H_
 
-int getString(char*, char*);
+int getInt(char* msg);
+float getFloat(char* msg);
+char getChar(char* msg);
+int getSON(char* msg);
+int getString(char* msg, char* destino);
+int getStringAll(char* msg, char* destino);
+int getStringNum(char* msg, char* destino);
+int esNumerica(char* cadena);
+int esFlotante(char* cadena);
+int esAlfanumerica(char* cadena);
+int esEspaciado(char* cadena);
 
 #endif /* INPUT_H_ */

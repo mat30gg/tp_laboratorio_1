@@ -4,6 +4,41 @@
 #include "ArrayEmployees.h"
 #include "input.h"
 
+
+void HardcodearEmpleados(sEmployees employeeList[])
+{
+	employeeList[3].id = 1;
+	strcpy(employeeList[3].name, "Carlos");
+	strcpy(employeeList[3].lastName, "Guiterrez");
+	employeeList[3].salary = 20000;
+	employeeList[3].sector = 200;
+	employeeList[3].isEmpty = 0;
+	employeeList[1].id = 2;
+	strcpy(employeeList[1].name, "Miguel");
+	strcpy(employeeList[1].lastName, "Angel");
+	employeeList[1].salary = 30000;
+	employeeList[1].sector = 200;
+	employeeList[1].isEmpty = 0;
+	employeeList[2].id = 3;
+	strcpy(employeeList[2].name, "Manuel");
+	strcpy(employeeList[2].lastName, "Jorge");
+	employeeList[2].salary = 45000;
+	employeeList[2].sector = 200;
+	employeeList[2].isEmpty = 0;
+	employeeList[0].id = 4;
+	strcpy(employeeList[0].name, "Ana");
+	strcpy(employeeList[0].lastName, "Banana");
+	employeeList[0].salary = 10000;
+	employeeList[0].sector = 201;
+	employeeList[0].isEmpty = 0;
+	employeeList[4].id = 5;
+	strcpy(employeeList[4].name, "Alan");
+	strcpy(employeeList[4].lastName, "Brito");
+	employeeList[4].salary = 60000;
+	employeeList[4].sector = 201;
+	employeeList[4].isEmpty = 0;
+}
+
 /** \brief Inicializa el parametro "isEmpty" del array tipo sEmployee en 1
  *
  * \param employeeList
@@ -70,35 +105,29 @@ void loadData(sEmployees employeeList[], int tam, int empty)
 		scanf("%[^\n]", name);
 		if(esEspaciado(name) == 1 || esAlfanumerica(name) == 0)
 		{
-			printf("\nIngrese un nombre valido sin espacios y numeros.");
+			printf("Ingrese un nombre valido sin espacios y numeros.");
 		}
 
 	}while(esEspaciado(name) == 1 || esAlfanumerica(name) == 0);
 	do{
 
 		fflush(stdin);
-		printf("\nIngrese el apellido del empleado: ");
+		printf("Ingrese el apellido del empleado: ");
 		scanf("%[^\n]", lastName);
 		if(esEspaciado(lastName) == 1 || esAlfanumerica(lastName) == 0)
 		{
-			printf("\nIngrese un apellido valido sin espacios y numeros.");
+			printf("Ingrese un apellido valido sin espacios y numeros.");
 		}
 
 	}while(esEspaciado(lastName) == 1|| esAlfanumerica(lastName) == 0);
 	do{
 
-		printf("\nIngrese el salario del empleado: ");
-		scanf("%f", &salary);
+		salary = getFloat("Ingrese salario del empleado: ");
 
 	}while(salary < 0);
 	do{
 
-		printf("\nIngrese el numero de sector al que pertenece el empleado: ");
-		scanf("%d", &sector);
-		if(sector < 0)
-		{
-			printf("Ingrese un numero valido.");
-		}
+		sector = getInt("Ingrese sector del empleado: ");
 
 	}while(sector < 0);
 	employeeList[empty] = addEmployee(id, name, lastName, salary, sector);
@@ -118,7 +147,8 @@ void loadData(sEmployees employeeList[], int tam, int empty)
  */
 sEmployees addEmployee(int id, char name[],char lastName[],float salary,int sector)
 {
-
+	name[0] = toupper(name[0]);
+	lastName[0] = toupper(lastName[0]);
 	sEmployees aux;
 	aux.id = id;
 	aux.sector = sector;
@@ -157,30 +187,7 @@ int findOpen(sEmployees employeeList[], int tam)
 
 
 
-/** \brief Verifica que en la cadena de caracteres solo existan tipos char
- *
- * \param word
- * \return Retorna positivo si no se encontro valor alfanumerico
- *
- */
-int VerifyChar(char word[])
-{
 
-	int valid;
-	int x;
-	int size;
-	valid = 1;
-	size = strlen(word);
-	for(x=0;x!=size;x++)
-	{
-		if(isalpha(word[x]) == 0)
-		{
-			valid = 0;
-		}
-	}
-	return valid;
-
-}
 
 /** \brief Busca que alguna posicion del array tenga valores cargados
  *
@@ -295,12 +302,26 @@ void printOneEmployee(sEmployees employeeList)
 
 	if(employeeList.isEmpty == 0)
 	{
-		printf("\n|ID: %d", employeeList.id);
-		printf("\n|Nombre: %s", employeeList.name);
-		printf("\n|Apellido: %s", employeeList.lastName);
-		printf("\n|Salario: %.2f", employeeList.salary);
-		printf("\n|Sector: %d", employeeList.sector);
+		printf("\n[%-3d] |%-6s, %-8s|   $%-9.2f   n°%-5d", employeeList.id, employeeList.name, employeeList.lastName, employeeList.salary, employeeList.sector);
+
 	}
+
+}
+
+int printEmployees(sEmployees employeeList[], int tam)
+{
+
+	int x;
+	printf("[ID]  (Nombre, Apellido)   :Sueldo:   {Sector}");
+	for(x=0;x!=tam;x++)
+	{
+		printOneEmployee(employeeList[x]);
+		if(employeeList[x].sector != employeeList[x+1].sector && employeeList[x+1].isEmpty == 0)
+		{
+			printf("\n----");
+		}
+	}
+	return 0;
 
 }
 
@@ -334,12 +355,9 @@ sEmployees modifyMenu(sEmployees employeeList)
 			case 3:
 				employeeList.salary = modifySalary(employeeList);
 			break;
-			/*case 4:
+			case 4:
 				employeeList.sector = modifySector(employeeList);
 			break;
-			case 5:
-				printOneEmployee(employeeList);
-			break;*/
 		}
 	}while(choice != 0);
 	return employeeList;
@@ -499,22 +517,39 @@ int sortMenu(sEmployees employeeList[], int tam)
  */
 int sortEmployees(sEmployees employeeList[], int tam, int order)
 {
-
+	int cant;
 	int error;
 	error = 0;
-	sEmployees auxList[tam];
-	initEmployees(auxList, tam);
-	CopyList(employeeList, auxList, tam);
-	OrderBySector(auxList, tam);
-	if(order == 1)
+	OrderBySector(employeeList, tam);
+	int x;
+	int y;
+	int r;
+	cant = CountLoaded(employeeList, tam);
+	for(x=0;x!=cant-1;x++)
 	{
-		AscendingOrder(auxList, tam);
+		for(y=x+1; y!=cant; y++)
+		{
+			if(employeeList[x].sector == employeeList[y].sector)
+			{
+				r = strcmp(employeeList[x].name, employeeList[y].name);
+				if(r != 0)
+				{
+					if(r > 0 && order == 0)
+					{
+						Swap(employeeList, x, y);
+					}
+					else
+					{
+						if(r < 0 && order == 1)
+						{
+							Swap(employeeList, x, y);
+						}
+					}
+				}
+			}
+		}
 	}
-	else
-	{
-		DescendingOrder(auxList, tam);
-	}
-	PrintEmployeesBySector(auxList, tam);
+	printEmployees(employeeList, tam);
 	return error;
 
 
@@ -527,138 +562,39 @@ int sortEmployees(sEmployees employeeList[], int tam, int order)
  * \param tam
  *
  */
-void AscendingOrder(sEmployees auxList[], int tam)
+void Swap(sEmployees employeeList[], int x, int y)
 {
 
 	sEmployees aux;
+	aux = employeeList[x];
+	employeeList[x] = employeeList[y];
+	employeeList[y] = aux;
+}
+
+
+void OrderBySector(sEmployees employeeList[], int tam)
+{
+	int cant;
 	int x;
 	int y;
-	for(x=0;x!=tam-1;x++)
+	cant = CountLoaded(employeeList, tam);
+	for(x=0;x!=cant-1;x++)
 	{
-		for(y=x+1;y!=tam;y++)
+		for(y=x+1;y!=cant;y++)
 		{
-			if(auxList[x].sector == auxList[y].sector)
+			if(employeeList[x].sector > employeeList[y].sector)
 			{
-				if(strcmp(auxList[y].name, auxList[x].name) > 0)
-				{
-					aux = auxList[y];
-					auxList[y] = auxList[x];
-					auxList[x] = aux;
-				}
+				Swap(employeeList, x, y);
 			}
 		}
 	}
-
-
-}
-
-
-/** \brief Ordena de forma descendente un array auxiliar de tipo sEmployees
- *
- * \param employeeList
- * \param tam
- *
- */
-void DescendingOrder(sEmployees auxList[], int tam)
-{
-
-	sEmployees aux;
-	int x;
-	int y;
-	for(x=0;x!=tam-1;x++)
-	{
-		for(y=x+1;y!=tam;y++)
-		{
-			if(auxList[x].sector == auxList[y].sector)
-			{
-				if(strcmp(auxList[x].name, auxList[y].name) > 0)
-				{
-					aux = auxList[y];
-					auxList[y] = auxList[x];
-					auxList[x] = aux;
-				}
-			}
-		}
-	}
-
-}
-
-void OrderBySector(sEmployees auxList[], int tam)
-{
-	int x;
-	int y;
-	sEmployees aux;
-	for(x=0;x!=tam-1;x++)
-	{
-		for(y=x+1;y!=tam;y++)
-		{
-			if(auxList[x].sector > auxList[y].sector)
-			{
-				aux = auxList[y];
-				auxList[y] = auxList[x];
-				auxList[x] = aux;
-			}
-		}
-	}
-}
-
-void CopyList(sEmployees employeeList[], sEmployees auxList[], int tam)
-{
-
-	int x;
-	int y;
-	y = 0;
-	for(x=0;x!=tam;x++)
-	{
-		if(employeeList[x].isEmpty == 0)
-		{
-			auxList[y] = employeeList[x];
-			y++;
-		}
-	}
-
-}
-
-void PrintEmployeesBySector(sEmployees auxList[], int tam)
-{
-
-	int place;
-	place = -1;
-	int x;
-	for(x=0;x!=tam;x++)
-	{
-		if(auxList[x].isEmpty == 0)
-		{
-			if(place != auxList[x].sector)
-			{
-				printf("\n\n\n\nSector: %d", auxList[x].sector);
-				place = auxList[x].sector;
-			}
-			printOneEmployee(auxList[x]);
-			printf("\n---------------------");
-		}
-	}
-
-}
-
-
-int printEmployees(sEmployees employeeList[], int tam)
-{
-
-	int x;
-	for(x=0;x!=tam;x++)
-	{
-		printOneEmployee(employeeList[x]);
-	}
-	return 0;
-
 }
 
 int AverageSalary(sEmployees employeeList[], int tam)
 {
 
 	int error;
-	int sum;
+	float sum;
 	int count;
 	float average;
 	error = 1;
@@ -666,11 +602,14 @@ int AverageSalary(sEmployees employeeList[], int tam)
 	count = CountLoaded(employeeList, tam);
 	if(sum != 0)
 	{
-		average = (float)sum / count;
-		printf("\nEl total de todos los salarios da: $%d", sum);
+		average = GetAverage(sum, count);
+		printf("\n\nEl total de todos los salarios da: $%.2f", sum);
 		printf("\nEl promedio total de los salarios es: $%.2f", average);
-		printf("\nLos empleados que superan el promedio de salario son: ");
-		printOverAverage(employeeList, tam, average);
+		if(count > 1)
+		{
+			printf("\nLos empleados que superan el promedio de salario son: ");
+			printOverAverage(employeeList, tam, average);
+		}
 		error = 0;
 	}
 	return error;
@@ -692,11 +631,18 @@ int CountLoaded(sEmployees employeeList[], int tam)
 	return count;
 }
 
-int SumSalaries(sEmployees employeeList[], int tam)
+float GetAverage(float suma, int cantidad)
+{
+	float returnAux;
+	returnAux = suma / cantidad;
+	return returnAux;
+}
+
+float SumSalaries(sEmployees employeeList[], int tam)
 {
 
 	int x;
-	int sum = 0;
+	float sum = 0;
 	for(x=0;x!=tam;x++)
 	{
 		if(employeeList[x].isEmpty == 0)
@@ -711,18 +657,12 @@ int SumSalaries(sEmployees employeeList[], int tam)
 void printOverAverage(sEmployees employeeList[], int tam, float average)
 {
 	int x;
-	int y;
-	y = 0;
-	sEmployees overAverageList[tam];
-	initEmployees(overAverageList, tam);
 	for(x=0;x!=tam;x++)
 	{
 		if(average < employeeList[x].salary)
 		{
-			overAverageList[y] = employeeList[x];
-			y++;
+			printOneEmployee(employeeList[x]);
 		}
 	}
-	printEmployees(overAverageList, tam);
 
 }

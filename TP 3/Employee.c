@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "input.h"
 #include "Employee.h"
 
 Employee *employee_new()
@@ -199,4 +200,108 @@ void updateLastId(int id)
 	aNewUltimo = fopen("ultimoId.bin", "wb");
 	fwrite(&id, sizeof(int), 1, aNewUltimo);
 	fclose(aNewUltimo);
+}
+
+void printOneEmployee(Employee* this)
+{
+	int id;
+	char* nombre;
+	int horasTrabajadas;
+	int sueldo;
+	nombre = (char*) malloc(128);
+	employee_getId(this, &id);
+	employee_getNombre(this, nombre);
+	employee_getHorasTrabajadas(this, &horasTrabajadas);
+	employee_getSueldo(this, &sueldo);
+	printf("[%4d] <%-9s>  %-3d Hs | $%d\n", id, nombre, horasTrabajadas, sueldo);
+}
+
+int employee_modifyNombre(Employee* this)
+{
+	int exito;
+	char* aux;
+	exito = 0;
+	aux = (char*) malloc(128);
+	if(getString("Ingrese nuevo nombre: ", aux) != -1)
+	{
+		exito = 1;
+		employee_setNombre(this, aux);
+	}
+	return exito;
+}
+
+int employee_modifyHorasTrabajadas(Employee* this)
+{
+	int exito;
+	int aux;
+	exito = 0;
+	aux = getInt("Ingrese nuevas horas de trabajo: ");
+	if(aux != -1)
+	{
+		exito = 1;
+		employee_setHorasTrabajadas(this, aux);
+	}
+	return exito;
+}
+
+int employee_modifySueldo(Employee* this)
+{
+	int exito;
+	int aux;
+	exito = 0;
+	aux = getInt("Ingrese nuevo sueldo: ");
+	if(aux != -1)
+	{
+		exito = 1;
+		employee_setSueldo(this, aux);
+	}
+	return exito;
+}
+
+int ordenNombre(void* e1, void* e2)
+{
+	Employee* x = e1;
+	Employee* y = e2;
+	int returnAux;
+	if(strcmp(x->nombre, y->nombre) == 0)
+	{
+		returnAux = 0;
+	}
+	else
+	{
+		if(strcmp(x->nombre, y->nombre) > 0)
+		{
+			returnAux = 1;
+		}
+		else
+		{
+			returnAux = -1;
+		}
+	}
+	return returnAux;
+}
+
+
+
+int ordenSueldo(void* e1, void* e2)
+{
+	Employee* x = e1;
+	Employee* y = e2;
+	int returnAux;
+	if(x->sueldo == y->sueldo)
+	{
+		returnAux = 0;
+	}
+	else
+	{
+		if(x->sueldo > y->sueldo)
+		{
+			returnAux = 1;
+		}
+		else
+		{
+			returnAux = -1;
+		}
+	}
+	return returnAux;
 }
