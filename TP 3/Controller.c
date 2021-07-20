@@ -314,19 +314,20 @@ int controller_saveAsText(char* path , LinkedList* pArrayListEmployee)
  */
 int controller_saveAsBinary(char* path , LinkedList* pArrayListEmployee)
 {
-	FILE* newT;
+	FILE* newB;
 	Employee* aux;
 	int exito;
 	int len;
 	exito = 0;
-	newT = fopen("test.bin", "wb");
+	newB = fopen(path, "wb");
 	aux = (Employee*) malloc(sizeof(Employee));
 	len = ll_len(pArrayListEmployee);
-	if(pArrayListEmployee != NULL && newT != NULL)
+	if(pArrayListEmployee != NULL && newB != NULL)
 	{
 		for(int x = 0;x != len; x++)
 		{
 			aux = ll_get(pArrayListEmployee, x);
+			fwrite(aux, sizeof(Employee), 1, newB);
 		}
 	}
 	return exito;

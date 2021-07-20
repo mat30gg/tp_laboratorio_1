@@ -39,6 +39,8 @@ int main()
     	printf("\n|| 5. Baja empleado.");
     	printf("\n|| 6. Listar empleados.");
     	printf("\n|| 7. Ordenar empleados.");
+    	printf("\n|| 8. Guardar datos de empleados en archivo .csv (Texto).");
+    	printf("\n|| 9. Guardar datos de empleados en archivo .bin (Binario).");
     	printf("\n|| 10. SALIR.");
     	printf("\n|| =:= ");
     	scanf("\n%d", &option);
