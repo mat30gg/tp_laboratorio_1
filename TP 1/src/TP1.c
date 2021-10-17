@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../TP 1/funciones.h"
+#include "funciones.h"
 
 int main(void) {
 	setbuf(stdout, NULL);

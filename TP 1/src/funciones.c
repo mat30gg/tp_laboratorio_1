@@ -1,4 +1,4 @@
-#include "../TP 1/funciones.h"
+#include "funciones.h"
 
 #include <stdio.h>
 #include <stdlib.h>

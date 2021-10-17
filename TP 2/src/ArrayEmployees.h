@@ -11,10 +11,10 @@ typedef struct{
 void HardcodearEmpleados(sEmployees[]);
 
 int initEmployees(sEmployees[], int);//
-int employeeEntry(sEmployees[], int);//
+int employeeEntry(sEmployees[], int, int*);//
 int findOpen(sEmployees[], int);//
 int findLoaded(sEmployees[], int);//
-void loadData(sEmployees[], int, int);//
+void loadData(sEmployees[], int, int, int);//
 sEmployees addEmployee(int, char[], char[], float, int);//
 int findEmployeeById(sEmployees[], int, int);//
 int removeEmployee(sEmployees[], int, int);//
@@ -39,3 +39,6 @@ void printOverAverage(sEmployees[], int, float);
 int CountLoaded(sEmployees[], int);
 float SumSalaries(sEmployees[], int);
 float GetAverage(float, int);
+
+int MainMenu();
+int informMenu(sEmployees[], int);

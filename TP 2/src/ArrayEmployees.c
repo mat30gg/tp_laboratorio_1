@@ -68,7 +68,7 @@ int initEmployees(sEmployees employeeList[], int tam)
  * \return Retorna valor positivo si no se encontro lugar libre
  *
  */
-int employeeEntry(sEmployees employeeList[], int tam)
+int employeeEntry(sEmployees employeeList[], int tam, int* lastId)
 {
 
 	int error = 1;
@@ -77,8 +77,8 @@ int employeeEntry(sEmployees employeeList[], int tam)
 	if(empty != -1)
 	{
 		error = 0;
-		loadData(employeeList, tam, empty);
-		employeeList[empty].isEmpty = 0;
+		loadData(employeeList, tam, *lastId ,empty);
+		(*lastId)++;
 	}
 	return error;
 
@@ -91,47 +91,54 @@ int employeeEntry(sEmployees employeeList[], int tam)
  * \param tam
  *
  */
-void loadData(sEmployees employeeList[], int tam, int empty)
+void loadData(sEmployees employeeList[], int tam, int id, int empty)
 {
-	int id;
 	char name[51];
 	char lastName[51];
 	float salary;
 	int sector;
-	id = empty+1;
+	int auxError;
 	do{
-		fflush(stdin);
-		printf("\nIngrese nombre del empleado: ");
-		scanf("%[^\n]", name);
+		getString("\nIngrese nombre del empleado: ", name);
+		auxError = 1;
 		if(esEspaciado(name) == 1 || esAlfanumerica(name) == 0)
 		{
-			printf("Ingrese un nombre valido sin espacios y numeros.");
+			auxError = 0;
+			printf("Ingrese un nombre valido sin espacios y numeros.\n");
 		}
 
-	}while(esEspaciado(name) == 1 || esAlfanumerica(name) == 0);
+	}while(auxError == 0);
 	do{
-
-		fflush(stdin);
-		printf("Ingrese el apellido del empleado: ");
-		scanf("%[^\n]", lastName);
+		auxError = 1;
+		getString("Ingrese el apellido del empleado: ", lastName);
 		if(esEspaciado(lastName) == 1 || esAlfanumerica(lastName) == 0)
 		{
-			printf("Ingrese un apellido valido sin espacios y numeros.");
+			auxError = 0;
+			printf("Ingrese un apellido valido sin espacios y numeros.\n");
 		}
 
-	}while(esEspaciado(lastName) == 1|| esAlfanumerica(lastName) == 0);
+	}while(auxError == 0);
 	do{
 
 		salary = getFloat("Ingrese salario del empleado: ");
-
-	}while(salary < 0);
+		auxError = 1;
+		if(salary < 0)
+		{
+			auxError = 0;
+			printf("Ingrese un salario valido.\n");
+		}
+	}while(auxError == 0);
 	do{
-
 		sector = getInt("Ingrese sector del empleado: ");
-
-	}while(sector < 0);
+		auxError = 1;
+		if(sector < 0)
+		{
+			auxError = 0;
+			printf("Ingrese un numero de sector valido.\n");
+		}
+	}while(auxError == 0);
 	employeeList[empty] = addEmployee(id, name, lastName, salary, sector);
-
+	employeeList[empty].isEmpty = 0;
 }
 
 
@@ -482,7 +489,31 @@ int deleteEmployee(sEmployees employeeList)
 
 }
 
-
+int informMenu(sEmployees employeeList[], int tam)
+{
+	int choice;
+	do{
+		printf("\n|||(1)Listado ordenado alfabeticamente por sector.");
+		printf("\n|||(2)Total y promedio de salarios con empleados que superen el mismo.");
+		printf("\n|||(0)Cancelar.");
+		choice = getInt("\n|||Elija una opcion: ");
+		switch(choice)
+		{
+		case 1:
+			sortMenu(employeeList, tam);
+			break;
+		case 2:
+			AverageSalary(employeeList, tam);
+			break;
+		case 0:
+			printf("CANCELANDO\n");
+			break;
+		default:
+			printf("VALOR INGRESADO NO VALIDO.\n");
+		}
+	}while(choice != 0);
+	return choice;
+}
 
 /** \brief Solicita el ingreso de un valor para definir como se mostrara el listado ordenado
  *
@@ -517,30 +548,28 @@ int sortMenu(sEmployees employeeList[], int tam)
  */
 int sortEmployees(sEmployees employeeList[], int tam, int order)
 {
-	int cant;
 	int error;
 	error = 0;
 	OrderBySector(employeeList, tam);
 	int x;
 	int y;
 	int r;
-	cant = CountLoaded(employeeList, tam);
-	for(x=0;x!=cant-1;x++)
+	for(x=0;x!=tam-1;x++)
 	{
-		for(y=x+1; y!=cant; y++)
+		for(y=x+1; y!=tam; y++)
 		{
 			if(employeeList[x].sector == employeeList[y].sector)
 			{
 				r = strcmp(employeeList[x].name, employeeList[y].name);
 				if(r != 0)
 				{
-					if(r > 0 && order == 0)
+					if(r > 0 && order == 1)
 					{
 						Swap(employeeList, x, y);
 					}
 					else
 					{
-						if(r < 0 && order == 1)
+						if(r < 0 && order == 0)
 						{
 							Swap(employeeList, x, y);
 						}
@@ -574,13 +603,11 @@ void Swap(sEmployees employeeList[], int x, int y)
 
 void OrderBySector(sEmployees employeeList[], int tam)
 {
-	int cant;
 	int x;
 	int y;
-	cant = CountLoaded(employeeList, tam);
-	for(x=0;x!=cant-1;x++)
+	for(x=0;x!=tam-1;x++)
 	{
-		for(y=x+1;y!=cant;y++)
+		for(y=x+1;y!=tam;y++)
 		{
 			if(employeeList[x].sector > employeeList[y].sector)
 			{
@@ -665,4 +692,18 @@ void printOverAverage(sEmployees employeeList[], int tam, float average)
 		}
 	}
 
+}
+
+int MainMenu()
+{
+	int choice;
+	printf("\n -------------------");
+	printf("\n||Menu:");
+	printf("\n||1 - Alta.");
+	printf("\n||2 - Modificacion.");
+	printf("\n||3 - Baja.");
+	printf("\n||4 - Listado en orden alfabetico por sector y promedio de salarios.");
+	printf("\n||0 - SALIR.");
+	choice = getInt("\n|| Elija una opcion:  ");
+	return choice;
 }

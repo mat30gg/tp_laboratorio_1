@@ -7,6 +7,7 @@
 int main(void)
 {
 	setbuf(stdout, NULL);
+	int lastId = 6;
 	int choice;
 	int aux;
 	sEmployees employeeList[TAM];
@@ -16,19 +17,11 @@ int main(void)
 	}
 	HardcodearEmpleados(employeeList);
 	do{
-		printf("\n -------------------");
-		printf("\n ||Menu:");
-		printf("\n ||1 - Alta.");
-		printf("\n ||2 - Modificacion.");
-		printf("\n ||3 - Baja.");
-		printf("\n ||4 - Listado en orden alfabetico por sector y promedio de salarios.");
-		printf("\n ||0 - SALIR.");
-		printf("\n || = ");
-		scanf("%d", &choice);
+		choice = MainMenu();
 		switch(choice)
 		{
 			case 1:
-				if(employeeEntry(employeeList, TAM))
+				if(employeeEntry(employeeList, TAM, &lastId))
 				{
 					printf("ERROR AL CARGAR EL EMPLEADO/NO SE ENCONTRO LUGAR DISPONIBLE.");
 				}
@@ -65,14 +58,7 @@ int main(void)
 			case 4:
 				if(findLoaded(employeeList, TAM) == 0)
 				{
-					if(sortMenu(employeeList, TAM))
-					{
-						printf("\n\nERROR AL ORDENAR LISTADO.");
-					}
-					if(AverageSalary(employeeList, TAM))
-					{
-						printf("\nERROR AL CALCULAR SALARIOS.");
-					}
+					informMenu(employeeList, TAM);
 				}
 				else
 				{
