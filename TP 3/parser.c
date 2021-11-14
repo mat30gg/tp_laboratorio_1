@@ -64,7 +64,6 @@ int parser_EmployeeFromBinary(FILE* pFile , LinkedList* pArrayListEmployee)
 	nombre = (char*) malloc(128);*/
 	exito = 0;
 	aux = (Employee*) malloc(sizeof(Employee));
-	fread(aux, sizeof(Employee), 1, pFile);
 	if(pFile!=NULL)
 	{
 		exito = 1;

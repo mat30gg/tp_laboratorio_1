@@ -24,7 +24,10 @@ int employee_getHorasTrabajadas(Employee* this,int* horasTrabajadas);
 int employee_setSueldo(Employee* this,int sueldo);
 int employee_getSueldo(Employee* this,int* sueldo);
 
+void copyEmployee(Employee* destino, Employee origen);
+
 void startLastId(char*);
+int searchLastId(char*);
 void updateLastId(int);
 
 void printOneEmployee(Employee* this);

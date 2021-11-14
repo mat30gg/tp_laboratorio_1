@@ -62,6 +62,17 @@ int getString(char* msg, char* destino)
 	return returnAux;
 }
 
+int getStringSize(char* cadena)
+{
+	int i;
+	int cont = 0;
+	for(i = 0; cadena[i] != '\0'; i++)
+	{
+		cont++;
+	}
+	return cont;
+}
+
 int getStringAll(char* msg, char* destino)
 {
 	int returnAux;

@@ -13,6 +13,7 @@ float getFloat(char* msg);
 char getChar(char* msg);
 int getSON(char* msg);
 int getString(char* msg, char* destino);
+int getStringSize(char* cadena);
 int getStringAll(char* msg, char* destino);
 int getStringNum(char* msg, char* destino);
 int esNumerica(char* cadena);

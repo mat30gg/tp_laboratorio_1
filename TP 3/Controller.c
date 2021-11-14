@@ -72,37 +72,39 @@ int controller_addEmployee(LinkedList* pArrayListEmployee)
 	FILE* aUltimo;
 	Employee* aux;
 	int ultimoId;
+	int errorFlag;
 	char* ultimoIdStr;
 
 	int exito;
-	char* id;
-	char* nombre;
-	char* horasTrabajadas;
-	char* sueldo;
+	char id[12];
+	char nombre[128];
+	char horasTrabajadas[4];
+	char sueldo[5];
 
+	exito = 0;
 	aUltimo = fopen("ultimoId.bin", "rb");
 	fread(&ultimoId, sizeof(int), 1, aUltimo);
 	ultimoId += 1;
-
-	exito = 0;
-	ultimoIdStr = (char*) malloc(12);
-	id = (char*) malloc(12);
-	itoa(ultimoId, ultimoIdStr, 10);
-	strcpy(id, ultimoIdStr);
-	nombre = (char*) malloc(128);
-	horasTrabajadas = (char*) malloc(4);
-	sueldo = (char*) malloc(5);
+	itoa(ultimoId, id, 10);
+	fclose(aUltimo);
 
 
-	if(getString("\nIngrese nombre: ", nombre) != -1)
+	errorFlag = getString("\nIngrese nombre: ", nombre);
+	if(errorFlag != -1)
 	{
 		nombre[0] = toupper(nombre[0]);
-		if(getStringNum("\nIngrese horas de trabajo: ", horasTrabajadas) != -1)
+		errorFlag = getStringNum("\nIngrese horas de trabajo: ", horasTrabajadas);
+		if(errorFlag != -1)
 		{
-			if(getStringNum("\nIngrese sueldo: ", sueldo) != -1)
+			errorFlag = getStringNum("\nIngrese sueldo: ", sueldo);
+			if(errorFlag != -1)
 			{
 				aux = employee_newParametros(id, nombre, horasTrabajadas, sueldo);
-				ll_add(pArrayListEmployee, aux);
+				errorFlag = ll_add(pArrayListEmployee, aux);
+				if(errorFlag != 0)
+				{
+					printf("No se pudo agregar el empleado.");
+				}
 			}
 			else
 			{
@@ -117,6 +119,12 @@ int controller_addEmployee(LinkedList* pArrayListEmployee)
 	else
 	{
 		printf("\n\nNombre ingresado contiene espacios o numeros.\n\n");
+	}
+
+	aUltimo = fopen("ultimoId.bin", "wb");
+	if(aUltimo != NULL && errorFlag != -1)
+	{
+		updateLastId(ultimoId);
 	}
 	fclose(aUltimo);
     return exito;
@@ -152,7 +160,8 @@ int findIndexId(LinkedList* pArrayListEmployee, int id)
  */
 int controller_editEmployee(LinkedList* pArrayListEmployee)
 {
-	Employee* aux;
+	Employee* employeeEdit;
+	Employee copia;
 	int id;
 	int index;
 	int menu;
@@ -160,30 +169,42 @@ int controller_editEmployee(LinkedList* pArrayListEmployee)
 	{
 		id = getInt("Ingrese ID del empleado a modificar: ");
 		index = findIndexId(pArrayListEmployee, id);
-		aux = ll_get(pArrayListEmployee, index);
-		printf("Modificando a empleado.\n");
-		printOneEmployee(aux);
-		do{
-			printf("  |||Que se va a modificar: ");
-			printf("\n||| 1 : Nombre.");
-			printf("\n||| 2 : HorasTrabajadas.");
-			printf("\n||| 3 : Sueldo.");
-			printf("\n||| 0 : Cancelar.");
-			printf("\n||| :=: ");
-			scanf("%d", &menu);
-			switch(menu)
-			{
-			case 1:
-				employee_modifyNombre(aux);
-			break;
-			case 2:
-				employee_modifyHorasTrabajadas(aux);
-			break;
-			case 3:
-				employee_modifySueldo(aux);
-			break;
-			}
-		}while(menu != 0);
+		if(index != -1)
+		{
+			employeeEdit = ll_get(pArrayListEmployee, index);
+			copyEmployee(&copia, *employeeEdit);
+			printf("Modificando a empleado.\n");
+			printOneEmployee(employeeEdit);
+			do{
+				printf("  |||Que se va a modificar: ");
+				printf("\n||| 1 : Nombre.");
+				printf("\n||| 2 : HorasTrabajadas.");
+				printf("\n||| 3 : Sueldo.");
+				printf("\n||| 4 : Cancelar modificacion.");
+				printf("\n||| 0 : Salir.");
+				printf("\n||| :=: ");
+				scanf("%d", &menu);
+				switch(menu)
+				{
+				case 1:
+					employee_modifyNombre(employeeEdit);
+				break;
+				case 2:
+					employee_modifyHorasTrabajadas(employeeEdit);
+				break;
+				case 3:
+					employee_modifySueldo(employeeEdit);
+				break;
+				case 4:
+					copyEmployee(employeeEdit, copia);
+				break;
+				}
+			}while(menu != 0);
+		}
+		else
+		{
+			printf("ID no encontrado");
+		}
 	}
 	return 1;
 }

@@ -9,42 +9,26 @@ Employee *employee_new()
 	Employee* pEmployee;
 
 	pEmployee = (Employee*) malloc(sizeof(Employee));
-	pEmployee->id = 0;
-	strcpy(pEmployee->nombre,"");
-	pEmployee->horasTrabajadas = 0;
-	pEmployee->sueldo = 0;
+	employee_setId(pEmployee, 0);
+	employee_setNombre(pEmployee, "");
+	employee_setHorasTrabajadas(pEmployee, 0);
+	employee_setSueldo(pEmployee, 0);
 
 	return pEmployee;
 }
 
 Employee *employee_newParametros(char* idStr,char* nombreStr,char* horasTrabajadasStr, char* sueldoStr)
 {
-	FILE* aUltimoId;
 	Employee* pEmployee;
 
 	int exito;
 	int id;
-	int ultimoId;
-	char* nombre;
 	int horasTrabajadas;
 	int sueldo;
 	exito = 0;
 	id = atoi(idStr);
-	nombre = (char*) malloc(128);
-	strcpy(nombre, nombreStr);
 	horasTrabajadas = atoi(horasTrabajadasStr);
 	sueldo = atoi(sueldoStr);
-
-
-	aUltimoId = fopen("ultimoId.bin", "rb");
-	if(aUltimoId != NULL)
-	{
-		fread(&ultimoId, sizeof(int), 1, aUltimoId);
-		if(ultimoId < id+1)
-		{
-			updateLastId(id);
-		}
-	}
 
 	pEmployee = employee_new();
 	if(pEmployee != NULL)
@@ -68,7 +52,6 @@ Employee *employee_newParametros(char* idStr,char* nombreStr,char* horasTrabajad
 			pEmployee = NULL;
 		}
 	}
-	fclose(aUltimoId);
 	return pEmployee;
 }
 void employee_delete(Employee* empleado)
@@ -169,29 +152,59 @@ int employee_getSueldo(Employee* this,int* sueldo)
 	return exito;
 }
 
+void copyEmployee(Employee* destino, Employee origen)
+{
+	employee_setId(destino, origen.id);
+	employee_setNombre(destino, origen.nombre);
+	employee_setHorasTrabajadas(destino, origen.horasTrabajadas);
+	employee_setSueldo(destino, origen.sueldo);
+}
+
 void startLastId(char* dir)
 {
-	char* ultimoId;
-	char* aux;
 	int id;
-	FILE* idTxt;
 	FILE* aUltimo;
 
-	ultimoId = (char*) malloc(12);
-	aux = (char*) malloc(24);
 	aUltimo = fopen("ultimoId.bin", "wb");
-	idTxt = fopen(dir, "r");
-	if(idTxt != NULL)
+	if(dir != NULL && aUltimo != NULL)
 	{
-		while(!feof(idTxt))
+		id = searchLastId(dir);
+		if(id != -1)
 		{
-			fscanf(idTxt, "%[^,],%[^\n]\n", ultimoId, aux);
+			fwrite(&id, sizeof(int), 1, aUltimo);
 		}
-		id = atoi(ultimoId);
-		fwrite(&id, sizeof(int), 1, aUltimo);
 	}
-	fclose(idTxt);
 	fclose(aUltimo);
+}
+
+int searchLastId(char* dir)
+{
+	FILE* arch;
+	char idAux[12];
+	char aux[24];
+	int fflag = 0;
+	int id;
+	int lastId;
+	arch = fopen(dir, "r");
+	if(arch != NULL)
+	{
+		while(!feof(arch))
+		{
+			fscanf(arch, "%[^,],%[^\n]\n", idAux, aux);
+			id = atoi(idAux);
+			if(fflag == 0 || id > lastId)
+			{
+				fflag = 1;
+				lastId = id;
+			}
+		}
+	}
+	else
+	{
+		lastId = -1;
+	}
+	fclose(arch);
+	return lastId;
 }
 
 void updateLastId(int id)
