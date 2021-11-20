@@ -32,24 +32,24 @@ typedef struct{
 int main(void)
 {
 	setbuf(stdout, NULL);
-	//startTesting(1);  // ll_newLinkedList
-	//startTesting(2);  // ll_len
-	//startTesting(3);  // getNode - test_getNode
-	//startTesting(4);  // addNode - test_addNode
-	//startTesting(5);  // ll_add
-	//startTesting(6);  // ll_get
-	//startTesting(7);  // ll_set
-	//startTesting(8);  // ll_remove
-	//startTesting(9);  // ll_clear
-	//startTesting(10); // ll_deleteLinkedList
-	//startTesting(11); // ll_indexOf
-	//startTesting(12); // ll_isEmpty
-	//startTesting(13); // ll_push
-	//startTesting(14); // ll_pop
-	//startTesting(15); // ll_contains
-	//startTesting(16); // ll_containsAll
-	//startTesting(17); // ll_subList
-	//startTesting(18); // ll_clone
+	startTesting(1);  // ll_newLinkedList
+	startTesting(2);  // ll_len
+	startTesting(3);  // getNode - test_getNode
+	startTesting(4);  // addNode - test_addNode
+	startTesting(5);  // ll_add
+	startTesting(6);  // ll_get
+	startTesting(7);  // ll_set
+	startTesting(8);  // ll_remove
+	startTesting(9);  // ll_clear
+	startTesting(10); // ll_deleteLinkedList
+	startTesting(11); // ll_indexOf
+	startTesting(12); // ll_isEmpty
+	startTesting(13); // ll_push
+	startTesting(14); // ll_pop
+	startTesting(15); // ll_contains
+	startTesting(16); // ll_containsAll
+	startTesting(17); // ll_subList
+	startTesting(18); // ll_clone
 	startTesting(19); // ll_sort */
 
 	casa* Casa1 = malloc(sizeof(casa));
@@ -57,6 +57,7 @@ int main(void)
 	Casa1->techo = 1;
 	Casa1->puerta = 3;
 	casa* aux;
+	casa* pop;
 	casa* Casa2 = malloc(sizeof(casa));
 	Casa2->paredes = 5;
 	Casa2->techo = 2;
@@ -65,10 +66,13 @@ int main(void)
 	ll_add(lista, Casa1);
 	ll_add(lista, Casa1);
 	ll_set(lista, 0, Casa2);
+	pop = ll_pop(lista, 0);
 	aux = ll_get(lista, 0);
 	int indice = ll_indexOf(lista, aux);
-	printf("%d %d %d",aux->paredes, aux->puerta, aux->techo);
-	printf("\n%d", indice);
+	printf("papa");
+	printf("\ncasa con pop %d %d %d", pop->paredes, pop->puerta, pop->techo);
+	printf("\nindice get %d", indice);
+	printf("\ncasa con get %d %d %d",aux->paredes, aux->puerta, aux->techo);
     return 0;
 }
 
