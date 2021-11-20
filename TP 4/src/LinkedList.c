@@ -259,7 +259,6 @@ int ll_remove(LinkedList* this,int index)
 				aux = anterior->pNextNode;
 				anterior->pNextNode = aux->pNextNode;
     		}
-    		//free(aux->pElement);
     		free(aux);
     		this->size -= 1;
     	}
@@ -287,7 +286,6 @@ int ll_clear(LinkedList* this)
     	for(x=0;x!=len;x++)
     	{
     		ll_remove(this, 0);
-    		//free(ll_get(this, 0));
     	}
     	this->size = 0;
     }

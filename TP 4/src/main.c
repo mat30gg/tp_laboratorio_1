@@ -23,12 +23,6 @@
 #include "../testing/inc/main_test.h"
 #include "../inc/LinkedList.h"
 
-typedef struct{
-	int paredes;
-	int techo;
-	int puerta;
-}casa;
-
 int main(void)
 {
 	setbuf(stdout, NULL);
@@ -52,27 +46,6 @@ int main(void)
 	startTesting(18); // ll_clone
 	startTesting(19); // ll_sort */
 
-	casa* Casa1 = malloc(sizeof(casa));
-	Casa1->paredes = 4;
-	Casa1->techo = 1;
-	Casa1->puerta = 3;
-	casa* aux;
-	casa* pop;
-	casa* Casa2 = malloc(sizeof(casa));
-	Casa2->paredes = 5;
-	Casa2->techo = 2;
-	Casa2->puerta = 2;
-	LinkedList* lista = ll_newLinkedList();
-	ll_add(lista, Casa1);
-	ll_add(lista, Casa1);
-	ll_set(lista, 0, Casa2);
-	pop = ll_pop(lista, 0);
-	aux = ll_get(lista, 0);
-	int indice = ll_indexOf(lista, aux);
-	printf("papa");
-	printf("\ncasa con pop %d %d %d", pop->paredes, pop->puerta, pop->techo);
-	printf("\nindice get %d", indice);
-	printf("\ncasa con get %d %d %d",aux->paredes, aux->puerta, aux->techo);
     return 0;
 }
 
